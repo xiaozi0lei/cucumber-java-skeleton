@@ -1,6 +1,21 @@
-Feature: Belly
+#language: zh-CN
+功能: 小鑫帮您贷下单
+  该用例是用来测试小鑫帮你贷下单过程
 
-  Scenario: a few cukes
-    Given I have 42 cukes in my belly
-    When I wait 1 hour
-    Then my belly should growl
+  步骤：
+  - 选择购车城市
+  - 选择车型
+  - 点击下一步
+
+  场景: 选择城市车型
+    步骤：
+    - 选择城市
+    - 选择车型
+    - 检查下一步按钮状态
+
+    假设 用浏览器打开网址"http://sq.daikuan.com/Secretary/Index?source=609"
+    当 选择购车城市"北京"
+    同时 选择车型"A 奥迪"
+    同时 选择车型"A3"
+    同时 选择车型"Sportback 35TFSI 进取型"
+    那么 按钮是"有效的"

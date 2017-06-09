@@ -3,16 +3,22 @@ apply plugin: 'java'
 project.ext {
     cucumberVersion = '1.2.5'
     junitVersion = '4.12'
+    seleniumVersion = '2.53.1'
+    vertxVersion = '3.0.0'
 }
 
 dependencies {
-    testCompile 'info.cukes:cucumber-java:' + cucumberVersion
+    testCompile 'info.cukes:cucumber-java8:' + cucumberVersion
     testCompile 'info.cukes:cucumber-junit:' + cucumberVersion
+    testCompile 'org.seleniumhq.selenium:selenium-java:' + seleniumVersion
+    testCompile 'org.seleniumhq.selenium:selenium-server:' + seleniumVersion
     testCompile 'junit:junit:' + junitVersion
+    testCompile 'io.vertx:vertx-unit:' + vertxVersion
+    compile 'io.vertx:vertx-core:' + vertxVersion
 }
 
 repositories {
-    mavenCentral()
+    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
 }
 
 test {
