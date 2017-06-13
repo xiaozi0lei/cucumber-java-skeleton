@@ -19,21 +19,21 @@ public class Stepdefs implements Zh_cn {
     @Before
     public void beforeScenario() {
         // 使用 Chrome 浏览器，制定 driver 的位置
+        String currentPath = System.getProperty("user.dir");
+
         System.setProperty("webdriver.chrome.driver", "browserDriver/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
-
 
         // 设置 Chrome 浏览的配置参数
         // 关闭 Chrome 正受自动测试软件的控制。infobars
         options.addArguments("disable-infobars", "--start-maximized");
         driver = new ChromeDriver(options);
-//        driver.manage().window().maximize();
         waitElement = new WaitElement(driver);
     }
 
     @After
     public void afterScenario() {
-        //driver.quit();
+        driver.quit();
     }
 
     @假设("^用浏览器打开网址\"([^\"]*)\"$")
@@ -65,8 +65,6 @@ public class Stepdefs implements Zh_cn {
             assert !driver.findElement(By.id("suerBtnp_step_1")).isEnabled();
         }
     }
-
-
 
 //    public Stepdefs() {
 //

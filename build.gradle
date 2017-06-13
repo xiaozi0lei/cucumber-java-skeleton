@@ -17,9 +17,9 @@ dependencies {
     compile 'io.vertx:vertx-core:' + vertxVersion
 }
 
-repositories {
-    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-}
+//repositories {
+//    maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//}
 
 test {
     testLogging.showStandardStreams = true

@@ -1,6 +1,8 @@
-/.idea/
+.idea
 *.iml
-/target/
-/lib
-/build/
-/.gradle/
+target
+lib
+build
+.gradle
+db
+.vertx

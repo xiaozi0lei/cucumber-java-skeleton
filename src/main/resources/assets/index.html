@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>UI 用例录入</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/assets/starter-template.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">测试平台</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">UI 测试用例 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">新车贷款</a></li>
+                        <li><a href="#">开走吧</a></li>
+                        <li><a href="#">二手车贷款</a></li>
+                        <li><a href="#">汽车保险</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">接口测试用例 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">新车贷款</a></li>
+                        <li><a href="#">开走吧</a></li>
+                        <li><a href="#">二手车贷款</a></li>
+                        <li><a href="#">汽车保险</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">测试配置 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">项目配置</a></li>
+                        <li><a href="#">接口配置</a></li>
+                        <li><a href="#">测试地址配置</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">测试工具 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">数据库查询</a></li>
+                        <li><a href="#">压测数据生成</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container" role="main">
+
+    <div class="page-header">
+        <h1>测试用例列表</h1>
+        <button class="pull-right btn btn-primary product-add" data-action="add" data-toggle="modal"
+                data-target="#productModal">
+            <span class="glyphicon glyphicon-plus"></span> 添加新用例
+        </button>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>标题</th>
+                        <th>Origin</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="content">
+                    <!-- filled using Ajax -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+    $(function () {
+        load();
+        initModal();
+    });
+    function create(name, origin) {
+        $.post("/api/whiskies", JSON.stringify({name: name, origin: origin}), function () {
+            load();
+        }, "json");
+    }
+    function remove(id) {
+        $.ajax({
+            method: "DELETE",
+            url: "/api/whiskies/" + id
+        }).done(function () {
+            load();
+        });
+    }
+    function update(id, name, origin) {
+        $.ajax({
+            method: "PUT",
+            url: "/api/whiskies/" + id,
+            data: JSON.stringify({name: name, origin: origin})
+        }).done(function () {
+            load();
+        });
+    }
+    function load() {
+        $("#content").children().remove();
+        $.getJSON("/api/whiskies", function (data) {
+            $.each(data, function (key, val) {
+                $("<tr><td>" + val.id + "</td><td>" + val.name + "</td><td>" + val.origin + "</td>" +
+                    "<td>" +
+                    "<button data-action='edit' class='btn btn-primary btn-sm product-edit' " +
+                    "data-toggle='modal' " +
+                    "data-target='#productModal' " +
+                    "data-name='" + val.name + "' " +
+                    "data-origin='" + val.origin + "' " +
+                    "data-id='" + val.id + "'>" +
+                    "<span class='glyphicon glyphicon-pencil'></span>" +
+                    "</button>" +
+                    "&nbsp;" +
+                    "<button class='btn btn-danger btn-sm product-delete' data-id='" + val.id + "'>" +
+                    "   <span class='glyphicon glyphicon-minus'></span>" +
+                    "</button>" +
+                    "</td>" +
+                    "</tr>").appendTo("#content");
+            });
+            initCallbacks();
+        });
+    }
+    function initCallbacks() {
+        $(".product-delete").unbind().click(function () {
+            var id = $(this).data("id");
+            remove(id);
+        });
+    }
+    function initModal() {
+        $("#productModal").on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var action = button.data('action');
+            var id = button.data('id');
+            var productAction = $("#productAction");
+            productAction.unbind();
+            var modal = $(this);
+            if (action === "add") {
+                modal.find('.modal-title').text("添加用例");
+                //modal.find('#product-name').val("");
+                //modal.find('#product-origin').val("");
+                productAction.click(function () {
+                    create($("#product-name").val(), $("#product-origin").val());
+                    $('#productModal').modal('toggle');
+                });
+            } else {
+                modal.find('.modal-title').text("编辑用例");
+                modal.find('#product-name').val(button.data("name"));
+                modal.find('#product-origin').val(button.data("origin"));
+                productAction.click(function () {
+                    update(id, $("#product-name").val(), $("#product-origin").val());
+                    $('#productModal').modal('toggle');
+                });
+            }
+        })
+    }
+</script>
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title" id="productModalTitle">添加用例</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="product-name" class="control-label">标题：</label>
+                        <input type="text" class="form-control" id="product-name" value="小鑫帮您贷下单">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-origin" class="control-label">用例内容：</label>
+                        <textarea rows="8" class="form-control" id="product-origin">功能: 小鑫帮您贷下单
+  该用例是用来测试小鑫帮你贷下单过程
+
+  步骤：
+  - 选择购车城市
+  - 选择车型
+  - 点击下一步
+
+  场景: 选择城市车型
+  步骤：
+  - 选择城市
+  - 选择车型
+  - 检查下一步按钮状态
+
+    假设 用浏览器打开网址"http://sq.daikuan.com/Secretary/Index?source=609"
+    当 选择购车城市"北京"
+    同时 选择车型"A 奥迪"
+    同时 选择车型"A3"
+    同时 选择车型"Sportback 35TFSI 进取型"
+    那么 按钮是"有效的"</textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="productAction" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
