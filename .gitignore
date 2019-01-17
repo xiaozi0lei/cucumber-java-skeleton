@@ -6,3 +6,4 @@ build
 .gradle
 db
 .vertx
+*.DS_Store
